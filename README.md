@@ -17,5 +17,3 @@ I’m a software engineer focused on full-stack JavaScript, SaaS products, AI in
 pnpm install
 pnpm dev
 ```
-
-The app runs at `http://localhost:3000`.
