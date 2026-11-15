@@ -21,11 +21,11 @@ function Home() {
 				</header>
 				<div className="wiki-columns">
 					<div className="article-main">
-						<p className="article-intro"><strong>Mario Francisco</strong> est ingénieur logiciel Full-Stack. Depuis 2022, il développe des applications SaaS et automatise des workflows avec JavaScript/TypeScript, Node.js et l’IA. Il a lancé Sckoob (700+ utilisateurs, 100+ actifs quotidiens au premier mois) et contribué à des projets SaaS multi-équipes. Il privilégie des systèmes simples à mesurer et à faire évoluer.</p>
+						<p className="article-intro"><strong>Ingénieur full-stack depuis 2022</strong>, j’intègre des agents IA en production pour automatiser les tâches répétitives. J’ai fondé Sckoob en mars 2026 : une communauté professionnelle anonyme accompagnée de Sckoobot, son agent IA. La plateforme compte plus de 700 utilisateurs et a dépassé 100 utilisateurs actifs quotidiens dès son premier mois.</p>
 						<ContentsNavigation />
 						<section className="article-section" id="biography">
 							<h2>Présentation <span aria-hidden="true">☷</span></h2>
-							<p>J’interviens sur des produits numériques de bout en bout : cadrage du besoin, architecture, développement, intégrations et déploiement. Je privilégie des outils fiables, simples à utiliser et prêts à évoluer.</p>
+							<p>Je prends en charge le parcours du besoin à la production : architecture, API, développement, intégrations et automatisation des opérations. Mon objectif : livrer des systèmes lisibles, mesurables et capables d’évoluer sans complexité inutile.</p>
 						</section>
 						<SkillsSection />
 					</div>

@@ -2,21 +2,23 @@ import { ContactIcon } from "../atoms/ContactIcon";
 import { useState } from "react";
 
 const skills = [
-	"Développement produit : JavaScript, TypeScript, React, Next.js, Node.js (Express, NestJS, Fastify), Python, PHP, HTML/CSS",
-	"SaaS & workflows : architecture multi-tenant, modélisation de workflows métier, orchestration et automatisation de tâches avec Inngest et n8n",
-	"IA & agents : API OpenAI, LangChain, CrewAI, VoltAgent, PydanticAI; conception d’intégrations IA adaptées aux produits",
-	"Agent, Harness & Factory Engineering : notions des approches et mise en pratique de certains patterns selon les projets",
-	"System design & montée en charge : scaling up/out, event-driven architecture et architectures SaaS; concepts étudiés et appliqués selon le contexte",
-	"Performance & données : optimisation de requêtes, batching, caching, streaming et database sharding; notions et mise en pratique ciblée",
-	"Infrastructure & livraison : Docker, AWS (eu-west-3), Scaleway, OVH, GitHub Actions, GitLab CI/CD",
-	"Qualité & collaboration : Clean Code, OAuth, RGPD, revues de code, leadership technique, communication et mentorat",
+	{ area: "Développement produit", details: "JavaScript/TypeScript, React, Next.js, Node.js (Express, NestJS, Fastify); Python et PHP." },
+	{ area: "SaaS & automatisation", details: "Systèmes multi-tenant, workflows métier, Inngest, n8n et planification de tâches (cron jobs)." },
+	{ area: "Données & intégration", details: "PostgreSQL, MongoDB, Redis, Elasticsearch, S3, API REST et GraphQL." },
+	{ area: "Queues & temps réel", details: "RabbitMQ, Cloudflare Queues, Ably, WebSockets et Cloudflare Durable Objects." },
+	{ area: "IA & agents", details: "OpenAI API, LangChain, CrewAI, VoltAgent, PydanticAI et OpenClaw; notions d’Agent, Harness et Factory Engineering, avec certains patterns appliqués en projet." },
+	{ area: "Architecture front-end", details: "Atomic Design, Feature-Sliced Design (FSD), Container/Presentational." },
+	{ area: "Cloud & environnements locaux", details: "AWS, Docker, GitHub Actions, GitLab CI/CD, Floci et LocalStack." },
 ];
+
+const systemDesignTopics = "System design, monolithes et microservices, scaling up/out, event-driven architecture, optimisation de requêtes, batching, caching, streaming et database sharding. Je connais ces approches et en ai déjà appliqué certaines dans des projets.";
 
 type Project = {
 	name: string;
 	image: string;
 	url: string;
-	description: string;
+	shortDescription: string;
+	details: string;
 };
 
 const projects: Project[] = [
@@ -24,13 +26,15 @@ const projects: Project[] = [
 		name: "Sckoob",
 		image: "/sckoob-project.png",
 		url: "https://sckoob.com/",
-		description: "Plateforme communautaire professionnelle anonyme, lancée sur les marchés africains et européens. Plus de 700 utilisateurs et 100+ utilisateurs actifs quotidiens au premier mois.",
+		shortDescription: "Communauté professionnelle bilingue pour échanger anonymement sur les salaires, les carrières et les offres d’emploi. Inscription possible sans e-mail.",
+		details: "Fondée en mars 2026, Sckoob est une communauté professionnelle bilingue où l’on échange anonymement sur les salaires, les carrières et les offres d’emploi. L’inscription peut se faire sans adresse e-mail. La connexion Google ou Microsoft est également proposée ; l’adresse e-mail n’est ni conservée ni hachée, et sa valeur est remplacée par un identifiant factice. Sckoob est accompagné de Sckoobot, son agent IA. Plus de 2 000 offres collectées, avec 100+ nouvelles offres par jour. Stack : Next.js, React, TypeScript, Tailwind CSS, PostgreSQL, Prisma, tRPC et Python.",
 	},
 	{
 		name: "Bandro Reisen",
 		image: "/bandro-reisen-project.png",
 		url: "https://madagaskar-bandroreisen.com/",
-		description: "Site de circuits touristiques à Madagascar, avec des filtres par durée, difficulté, prix et centres d’intérêt.",
+		shortDescription: "Site bilingue de circuits à Madagascar, avec un back-office pour gérer les circuits et les réservations.",
+		details: "Site bilingue allemand–anglais présentant les circuits et voyages sur mesure à Madagascar. Son back-office permet de gérer les circuits et les réservations ; le site ne gère pas les paiements. Développé avec Next.js, React, TypeScript, Payload CMS et PostgreSQL. 12 témoignages de voyageurs publiés.",
 	},
 ];
 
@@ -38,9 +42,9 @@ const experience = [
 	{
 		company: "Irok",
 		url: "https://www.irok.fr/",
-		role: "Lead technique",
+		role: "Project Lead",
 		period: "07/2025 – aujourd’hui",
-		detail: "Pilotage de projets SaaS multi-tenant, coordination de 5 équipes d’ingénieurs sur 2 projets majeurs et accompagnement des pratiques de développement.",
+		detail: "Pilotage de certains projets, dont deux projets majeurs mobilisant cinq équipes d’ingénieurs. Contribution au développement d’un SaaS multi-tenant et aux pratiques de développement.",
 	},
 	{
 		company: "Opportunity France",
@@ -84,7 +88,13 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 }
 
 export function SkillsSection() {
-	return <section className="article-section" id="competences"><SectionHeading>Compétences</SectionHeading><ul className="skills-list">{skills.map((skill) => <li key={skill}>{skill}</li>)}</ul></section>;
+	return (
+		<section className="article-section" id="competences">
+			<SectionHeading>Compétences</SectionHeading>
+			<ul className="skills-list">{skills.map(({ area, details }) => <li key={area}><strong>{area} :</strong> {details}</li>)}</ul>
+			<div className="system-design-note"><h3>Architecture & performance</h3><p>{systemDesignTopics}</p></div>
+		</section>
+	);
 }
 
 export function ProjectsSection() {
@@ -99,14 +109,15 @@ export function ProjectsSection() {
 		<section className="article-section projects-section" id="projets">
 			<SectionHeading>Projets</SectionHeading>
 			<div className="projects-grid">
-				{projects.map(({ name, image, url, description }) => (
+				{projects.map(({ name, image, url, shortDescription, details }) => (
 					<article className="project-card" key={name}>
 						<button className="project-image-button" type="button" onClick={() => { setPreview({ image, name }); setZoomed(false); }} aria-label={`Agrandir la capture de ${name}`}>
 							<img className="project-image" src={image} alt={`Capture du site ${name}`} />
 						</button>
 						<h3>{name}</h3>
+						<span className="project-mobile-description">{shortDescription}</span>
 						<a className="project-cta" href={url} target="_blank" rel="noreferrer">Voir le projet <span aria-hidden="true">↗</span></a>
-						<span className="project-description">{description}</span>
+						<span className="project-description">{details}</span>
 					</article>
 				))}
 			</div>
@@ -135,7 +146,14 @@ export function PortfolioSections() {
 			</section>
 			<section className="article-section" id="mentorat">
 				<SectionHeading>Leadership & mentorat</SectionHeading>
-				<p>En tant que lead technique, j’ai contribué aux choix d’architecture, animé des revues de code et coordonné des projets impliquant plusieurs équipes. J’accorde de l’importance au mentorat : partager le contexte, rendre les décisions techniques compréhensibles et aider les développeurs à débloquer des problèmes. Le but est de faire progresser ensemble la qualité du produit et l’autonomie de l’équipe.</p>
+				<p>Dans mes missions de project lead, je facilite la collaboration entre équipes, clarifie les décisions techniques et aide à lever les blocages. Je contribue aux revues de code et au partage de pratiques pour renforcer la qualité sans ralentir la livraison. Le mentorat passe pour moi par la transmission du contexte et l’accompagnement vers des solutions autonomes.</p>
+			</section>
+			<section className="article-section" id="soft-skills">
+				<SectionHeading>Soft skills & langues</SectionHeading>
+				<div className="soft-skills-grid">
+					<div><h3>Collaboration</h3><ul><li>Leadership et coordination de projet</li><li>Communication technique et interfonctionnelle</li><li>Mentorat et partage de connaissances</li><li>Sens produit et méthodes agiles</li></ul></div>
+					<div><h3>Langues</h3><ul><li>Français</li><li>Anglais</li></ul></div>
+				</div>
 			</section>
 			<section className="article-section" id="formation">
 				<SectionHeading>Formation</SectionHeading>

@@ -8,6 +8,7 @@ const sections: TocSection[] = [
 	{ id: "projets", label: "Projets" },
 	{ id: "experience", label: "Expérience professionnelle" },
 	{ id: "mentorat", label: "Leadership & mentorat" },
+	{ id: "soft-skills", label: "Soft skills & langues" },
 	{ id: "formation", label: "Formation" },
 	{ id: "contact", label: "Contact" },
 ];
