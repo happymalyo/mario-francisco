@@ -1,3 +1,14 @@
+packages:
+  - .
+
+# pnpm 10 (used by Workers Builds)
+onlyBuiltDependencies:
+  - esbuild
+  - lightningcss
+  - workerd
+
+# pnpm 11 format
 allowBuilds:
   esbuild: true
+  lightningcss: true
   workerd: true
