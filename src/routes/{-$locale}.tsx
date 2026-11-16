@@ -27,7 +27,7 @@ function Home() {
       <div className="site-brand"><img className="wiki-brand" src="/mario-francisco-logo.png" alt="Mario Francisco Randrianandrasana" /></div>
       <article className="wiki-page">
         <div className="article-topline">
-          <div className="article-category">in: <a href="#competences">{en ? "Software engineering · SaaS · AI" : "Ingénierie logicielle · SaaS · IA"}</a></div>
+          <div className="article-category">in: <a href="#competences">{en ? "Software engineering · AI" : "Ingénierie logicielle · IA"}</a></div>
           <details className="language-switch">
             <summary aria-label={en ? "Choose language" : "Choisir la langue"}>
               <span>{en ? "English" : "Français"}</span>
