@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import type { Locale } from "../i18n";
 import { ContentsNavigation } from "../components/molecules/ContentsNavigation";
 import { ContactLinks } from "../components/molecules/ContactLinks";
@@ -22,19 +22,23 @@ export const Route = createFileRoute("/{-$locale}")({
 function Home() {
   const { locale } = Route.useRouteContext();
   const en = locale === "en";
-  const navigate = useNavigate();
   return (
     <main className="page-shell">
       <div className="site-brand"><img className="wiki-brand" src="/mario-francisco-logo.png" alt="Mario Francisco Randrianandrasana" /></div>
       <article className="wiki-page">
-        <div className="article-category">{en ? "in:" : "in:"} <a href="#competences">{en ? "Software engineering · SaaS · AI" : "Ingénierie logicielle · SaaS · IA"}</a></div>
-        <label className="language-label" aria-label={en ? "Choose language" : "Choisir la langue"}>
-          <svg className="language-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
-          <select value={locale} onChange={(event) => navigate({ to: "/{-$locale}", params: { locale: event.target.value === "en" ? undefined : "fr" } })}>
-            <option value="en">English</option>
-            <option value="fr">Français</option>
-          </select>
-        </label>
+        <div className="article-topline">
+          <div className="article-category">in: <a href="#competences">{en ? "Software engineering · SaaS · AI" : "Ingénierie logicielle · SaaS · IA"}</a></div>
+          <details className="language-switch">
+            <summary aria-label={en ? "Choose language" : "Choisir la langue"}>
+              <span>{en ? "English" : "Français"}</span>
+              <svg viewBox="0 0 12 8" aria-hidden="true"><path d="m1 1 5 5 5-5" /></svg>
+            </summary>
+            <div className="language-menu" role="listbox" aria-label={en ? "Languages" : "Langues"}>
+              <Link role="option" aria-selected={en} to="/{-$locale}" params={{ locale: undefined }}>English</Link>
+              <Link role="option" aria-selected={!en} to="/{-$locale}" params={{ locale: "fr" }}>Français</Link>
+            </div>
+          </details>
+        </div>
         <header className="article-heading"><h1>Mario Francisco R.</h1><ContactLinks /></header>
         <div className="wiki-columns">
           <div className="article-main">
