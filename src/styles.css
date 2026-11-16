@@ -43,10 +43,13 @@ body {
   background: #fff;
   box-shadow: 0 16px 44px -25px rgba(10, 45, 34, .35);
 }
+.site-brand { width: min(100%, 1200px); margin: 0 auto -25px; padding: 0; }
+.wiki-brand { position: relative; top: 10px; display: block; width: min(260px, 75%); height: auto; }
 .article-category { margin-bottom: 18px; color: #444; font-size: 13px; font-weight: 600; }
 .article-category a { color: #966000; text-decoration: none; }
-.language-label { position: absolute; top: 24px; right: 40px; color: #444; font-size: 14px; font-weight: 600; }
-.language-label span { padding-left: 4px; }
+.language-label { position: absolute; top: 18px; right: 30px; display: flex; align-items: center; gap: 8px; color: #444; font-size: 14px; font-weight: 600; }
+.language-icon { width: 20px; height: 20px; flex: 0 0 20px; stroke: currentColor; stroke-width: 1.7; }
+.language-label select { min-width: 104px; padding: 6px 24px 6px 8px; border: 1px solid #aaa; border-radius: 3px; color: inherit; background: #fff; font: inherit; cursor: pointer; }
 .article-heading { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 14px; }
 .article-heading h1 { margin: 0; color: #3b3b3b; font-size: clamp(30px, 3vw, 36px); line-height: 1.2; font-weight: 400; letter-spacing: -.035em; }
 .contact-links { display: flex; align-items: center; gap: 12px; }
@@ -137,8 +140,10 @@ body {
 .infobox-footer { padding: 4px; background: #ff9900; text-align: center; font-size: 10px; font-weight: 700; }
 @media (max-width: 760px) {
   .page-shell { padding: 20px 12px; }
+  .site-brand { display: flex; justify-content: center; }
+  .wiki-brand { width: min(240px, 75%); }
   .wiki-page { min-height: calc(100vh - 40px); padding: 22px 22px 48px; }
-  .language-label { right: 22px; top: 22px; }
+  .language-label { right: 22px; top: 14px; }
   .article-heading { align-items: flex-start; flex-direction: column; gap: 8px; }
   .wiki-columns { grid-template-columns: minmax(0, 1fr) 220px; gap: 20px; }
   .projects-grid { grid-template-columns: 1fr; }

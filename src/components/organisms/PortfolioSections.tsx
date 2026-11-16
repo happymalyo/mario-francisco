@@ -1,5 +1,6 @@
 import { ContactIcon } from "../atoms/ContactIcon";
 import { useState } from "react";
+import type { Locale } from "../../i18n";
 
 const skills = [
 	{ area: "Développement produit", details: "JavaScript/TypeScript, React, Next.js, Node.js (Express, NestJS, Fastify); Python et PHP." },
@@ -12,6 +13,33 @@ const skills = [
 ];
 
 const systemDesignTopics = "System design, monolithes et microservices, scaling up/out, event-driven architecture, optimisation de requêtes, batching, caching, streaming et database sharding. Je connais ces approches et en ai déjà appliqué certaines dans des projets.";
+const skillsEn = [
+	["Product development", "JavaScript/TypeScript, React, Next.js, Node.js (Express, NestJS, Fastify), Python, and PHP."],
+	["SaaS & automation", "Multi-tenant systems, business workflows, Inngest, n8n, and scheduled jobs (cron)."],
+	["Data & integrations", "PostgreSQL, MongoDB, Redis, Elasticsearch, S3, REST and GraphQL APIs."],
+	["Queues & real time", "RabbitMQ, Cloudflare Queues, Ably, WebSockets, and Cloudflare Durable Objects."],
+	["AI & agents", "OpenAI API, LangChain, CrewAI, VoltAgent, PydanticAI, and OpenClaw; familiar with Agent, Harness, and Factory Engineering concepts, with some patterns applied in projects."],
+	["Front-end architecture", "Atomic Design, Feature-Sliced Design (FSD), and Container/Presentational."],
+	["Cloud & local environments", "AWS, Docker, GitHub Actions, GitLab CI/CD, Floci, and LocalStack."],
+];
+const projectEn: Record<string, { shortDescription: string; details: string }> = {
+	Sckoob: {
+		shortDescription: "A bilingual professional community for anonymous discussions about salaries, careers, and job listings. Sign-up is available without an email address.",
+		details: "Founded in March 2026, Sckoob is a bilingual professional community for anonymous discussions about salaries, careers, and job listings. Members can sign up without an email address. Google and Microsoft sign-in are also available; email addresses are neither stored nor hashed, and are replaced with a dummy identifier. Sckoob is accompanied by Sckoobot, its AI agent. The platform has collected over 2,000 job listings, with 100+ new listings per day. Stack: Next.js, React, TypeScript, Tailwind CSS, PostgreSQL, Prisma, tRPC, and Python.",
+	},
+	"Bandro Reisen": {
+		shortDescription: "A bilingual tour website for Madagascar, with a back office for managing tours and bookings.",
+		details: "A German–English website showcasing tours and tailor-made trips in Madagascar. Its back office manages tours and bookings; the site does not handle payments. Built with Next.js, React, TypeScript, Payload CMS, and PostgreSQL. 12 traveler testimonials published.",
+	},
+};
+const experienceEn: Record<string, { role: string; period: string; detail: string }> = {
+	Irok: { role: "Project Lead", period: "07/2025 – present", detail: "Led selected projects, including two major initiatives involving five engineering teams. Contributed to a multi-tenant SaaS product and to engineering practices." },
+	"Opportunity France": { role: "Full-Stack Engineer", period: "06/2024 – 12/2024", detail: "Developed client-facing features and resolved technical issues across the platform." },
+	SmartPredict: { role: "Full-Stack Engineer", period: "11/2023 – 05/2024", detail: "Automated application tracking, migrated the site from Gatsby to Next.js, and built AI tools for data discovery." },
+	"Travelia Safari": { role: "JavaScript Developer Consultant", period: "02/2024 – 04/2024", detail: "Optimized the web platform and implemented OAuth authentication protocols." },
+	"Andine Groupe": { role: "Full-Stack Engineer", period: "06/2022 – 07/2023", detail: "Designed an encoding system for storage areas to improve logistics organization and traceability." },
+	Ingenosya: { role: "Full-Stack Intern", period: "01/2020 – 04/2020", detail: "Built an online technical assessment platform for candidates." },
+};
 
 type Project = {
 	name: string;
@@ -87,17 +115,19 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 	return <h2>{children}<span aria-hidden="true">☷</span></h2>;
 }
 
-export function SkillsSection() {
+export function SkillsSection({ locale = "fr" }: { locale?: Locale }) {
+	const en = locale === "en";
 	return (
 		<section className="article-section" id="competences">
-			<SectionHeading>Compétences</SectionHeading>
-			<ul className="skills-list">{skills.map(({ area, details }) => <li key={area}><strong>{area} :</strong> {details}</li>)}</ul>
-			<div className="system-design-note"><h3>Architecture & performance</h3><p>{systemDesignTopics}</p></div>
+			<SectionHeading>{en ? "Skills" : "Compétences"}</SectionHeading>
+			<ul className="skills-list">{skills.map(({ area, details }, index) => <li key={area}><strong>{en ? skillsEn[index]?.[0] : area}{en ? ":" : " :"}</strong> {en ? skillsEn[index]?.[1] : details}</li>)}</ul>
+			<div className="system-design-note"><h3>Architecture & {en ? "performance" : "performance"}</h3><p>{en ? "System design, monoliths and microservices, scaling up and out, event-driven architecture, query optimization, batching, caching, streaming, and database sharding. I understand these approaches and have applied some of them in projects." : systemDesignTopics}</p></div>
 		</section>
 	);
 }
 
-export function ProjectsSection() {
+export function ProjectsSection({ locale = "fr" }: { locale?: Locale }) {
+	const en = locale === "en";
 	const [preview, setPreview] = useState<{ image: string; name: string } | null>(null);
 	const [zoomed, setZoomed] = useState(false);
 	const closePreview = () => {
@@ -107,63 +137,64 @@ export function ProjectsSection() {
 
 	return (
 		<section className="article-section projects-section" id="projets">
-			<SectionHeading>Projets</SectionHeading>
+			<SectionHeading>{en ? "Projects" : "Projets"}</SectionHeading>
 			<div className="projects-grid">
 				{projects.map(({ name, image, url, shortDescription, details }) => (
 					<article className="project-card" key={name}>
-						<button className="project-image-button" type="button" onClick={() => { setPreview({ image, name }); setZoomed(false); }} aria-label={`Agrandir la capture de ${name}`}>
-							<img className="project-image" src={image} alt={`Capture du site ${name}`} />
+						<button className="project-image-button" type="button" onClick={() => { setPreview({ image, name }); setZoomed(false); }} aria-label={`${en ? "Enlarge screenshot of" : "Agrandir la capture de"} ${name}`}>
+							<img className="project-image" src={image} alt={`${en ? "Screenshot of" : "Capture du site"} ${name}`} />
 						</button>
 						<h3>{name}</h3>
-						<span className="project-mobile-description">{shortDescription}</span>
-						<a className="project-cta" href={url} target="_blank" rel="noreferrer">Voir le projet <span aria-hidden="true">↗</span></a>
-						<span className="project-description">{details}</span>
+						<span className="project-mobile-description">{en ? projectEn[name]?.shortDescription : shortDescription}</span>
+						<a className="project-cta" href={url} target="_blank" rel="noreferrer">{en ? "View project" : "Voir le projet"} <span aria-hidden="true">↗</span></a>
+						<span className="project-description">{en ? projectEn[name]?.details : details}</span>
 					</article>
 				))}
 			</div>
-			{preview && <div className={`project-lightbox${zoomed ? " is-zoomed" : ""}`} role="dialog" aria-modal="true" aria-label={`Capture du projet ${preview.name}`} tabIndex={-1} onKeyDown={(event) => { if (event.key === "Escape") closePreview(); }} onClick={(event) => { if (event.target === event.currentTarget) closePreview(); }}>
-				<button className="project-lightbox-zoom" type="button" onClick={() => setZoomed(!zoomed)} aria-label={zoomed ? "Réduire l’image" : "Afficher l’image en taille réelle"}>{zoomed ? "−" : "+"}</button>
-				<button className="project-lightbox-close" type="button" autoFocus onClick={closePreview} aria-label="Fermer l’image">×</button>
-				<img className="project-lightbox-image" src={preview.image} alt={`Capture agrandie du projet ${preview.name}`} />
+			{preview && <div className={`project-lightbox${zoomed ? " is-zoomed" : ""}`} role="dialog" aria-modal="true" aria-label={`${en ? "Project screenshot" : "Capture du projet"} ${preview.name}`} tabIndex={-1} onKeyDown={(event) => { if (event.key === "Escape") closePreview(); }} onClick={(event) => { if (event.target === event.currentTarget) closePreview(); }}>
+				<button className="project-lightbox-zoom" type="button" onClick={() => setZoomed(!zoomed)} aria-label={zoomed ? (en ? "Zoom out" : "Réduire l’image") : (en ? "View image at full size" : "Afficher l’image en taille réelle")}>{zoomed ? "−" : "+"}</button>
+				<button className="project-lightbox-close" type="button" autoFocus onClick={closePreview} aria-label={en ? "Close image" : "Fermer l’image"}>×</button>
+				<img className="project-lightbox-image" src={preview.image} alt={`${en ? "Enlarged screenshot of" : "Capture agrandie du projet"} ${preview.name}`} />
 			</div>}
 		</section>
 	);
 }
 
-export function PortfolioSections() {
+export function PortfolioSections({ locale = "fr" }: { locale?: Locale }) {
+	const en = locale === "en";
 	return (
 		<>
 			<section className="article-section" id="experience">
-				<SectionHeading>Expérience professionnelle</SectionHeading>
+				<SectionHeading>{en ? "Professional experience" : "Expérience professionnelle"}</SectionHeading>
 				<div className="experience-table-wrap">
 					<table className="experience-table">
-						<thead><tr><th>Entreprise</th><th>Poste</th><th>Période</th><th>Réalisations</th></tr></thead>
+						<thead><tr><th>{en ? "Company" : "Entreprise"}</th><th>{en ? "Role" : "Poste"}</th><th>{en ? "Period" : "Période"}</th><th>{en ? "Highlights" : "Réalisations"}</th></tr></thead>
 						<tbody>{experience.map(({ company, url, role, period, detail }) => (
-							<tr key={company}><th scope="row"><a href={url} target="_blank" rel="noreferrer">{company}</a></th><td>{role}</td><td className="experience-period">{period}</td><td>{detail}</td></tr>
+							<tr key={company}><th scope="row"><a href={url} target="_blank" rel="noreferrer">{company}</a></th><td>{en ? experienceEn[company]?.role : role}</td><td className="experience-period">{en ? experienceEn[company]?.period : period}</td><td>{en ? experienceEn[company]?.detail : detail}</td></tr>
 						))}</tbody>
 					</table>
 				</div>
 			</section>
 			<section className="article-section" id="mentorat">
-				<SectionHeading>Leadership & mentorat</SectionHeading>
-				<p>Dans mes missions de project lead, je facilite la collaboration entre équipes, clarifie les décisions techniques et aide à lever les blocages. Je contribue aux revues de code et au partage de pratiques pour renforcer la qualité sans ralentir la livraison. Le mentorat passe pour moi par la transmission du contexte et l’accompagnement vers des solutions autonomes.</p>
+				<SectionHeading>{en ? "Leadership & mentoring" : "Leadership & mentorat"}</SectionHeading>
+				<p>{en ? "As a project lead, I facilitate collaboration between teams, clarify technical decisions, and help remove blockers. I contribute to code reviews and shared practices to improve quality without slowing delivery. Mentoring means sharing context and helping people find independent solutions." : "Dans mes missions de project lead, je facilite la collaboration entre équipes, clarifie les décisions techniques et aide à lever les blocages. Je contribue aux revues de code et au partage de pratiques pour renforcer la qualité sans ralentir la livraison. Le mentorat passe pour moi par la transmission du contexte et l’accompagnement vers des solutions autonomes."}</p>
 			</section>
 			<section className="article-section" id="soft-skills">
-				<SectionHeading>Soft skills & langues</SectionHeading>
+				<SectionHeading>{en ? "Soft skills & languages" : "Soft skills & langues"}</SectionHeading>
 				<div className="soft-skills-grid">
-					<div><h3>Collaboration</h3><ul><li>Leadership et coordination de projet</li><li>Communication technique et interfonctionnelle</li><li>Mentorat et partage de connaissances</li><li>Sens produit et méthodes agiles</li></ul></div>
-					<div><h3>Langues</h3><ul><li>Français</li><li>Anglais</li></ul></div>
+					<div><h3>{en ? "Collaboration" : "Collaboration"}</h3><ul>{(en ? ["Leadership and project coordination", "Technical and cross-functional communication", "Mentoring and knowledge sharing", "Product mindset and agile methods"] : ["Leadership et coordination de projet", "Communication technique et interfonctionnelle", "Mentorat et partage de connaissances", "Sens produit et méthodes agiles"]).map((text) => <li key={text}>{text}</li>)}</ul></div>
+					<div><h3>{en ? "Languages" : "Langues"}</h3><ul><li>{en ? "French" : "Français"}</li><li>{en ? "English" : "Anglais"}</li></ul></div>
 				</div>
 			</section>
 			<section className="article-section" id="formation">
-				<SectionHeading>Formation</SectionHeading>
+				<SectionHeading>{en ? "Education" : "Formation"}</SectionHeading>
 				<ul className="education-list">
-					<li><strong><a href="https://www.emit.mg/" target="_blank" rel="noreferrer">Université de l’EMIT</a></strong> — Master 2 en informatique, modélisation et ingénierie logicielle (diplômé en novembre 2022).</li>
+					<li><strong><a href="https://www.emit.mg/" target="_blank" rel="noreferrer">{en ? "EMIT University" : "Université de l’EMIT"}</a></strong> — {en ? "Master’s degree in computer science, modeling, and software engineering (graduated November 2022)." : "Master 2 en informatique, modélisation et ingénierie logicielle (diplômé en novembre 2022)."}</li>
 				</ul>
 			</section>
 			<section className="article-section" id="contact">
-				<SectionHeading>Contact</SectionHeading>
-				<p>Tu as un produit web à lancer, une application à faire évoluer ou un processus à automatiser avec l’IA ? Parlons de ton besoin et du résultat que tu veux obtenir.</p>
+				<SectionHeading>{en ? "Contact" : "Contact"}</SectionHeading>
+				<p>{en ? "Do you have a web product to launch, an application to improve, or a process to automate with AI? Let’s talk about your needs and the outcome you want." : "Tu as un produit web à lancer, une application à faire évoluer ou un processus à automatiser avec l’IA ? Parlons de ton besoin et du résultat que tu veux obtenir."}</p>
 				<p className="contact-cta">
 					<a href="https://wa.me/261344432719" target="_blank" rel="noreferrer"><ContactIcon name="whatsapp" /> (+261) 34 44 327 19</a>
 					<a href="mailto:rtafitamario@gmail.com"><ContactIcon name="email" /> rtafitamario@gmail.com</a>
