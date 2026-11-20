@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
 import type { Locale } from "../i18n";
 import { ContentsNavigation } from "../components/molecules/ContentsNavigation";
 import { ContactLinks } from "../components/molecules/ContactLinks";
@@ -22,20 +23,37 @@ export const Route = createFileRoute("/{-$locale}")({
 function Home() {
   const { locale } = Route.useRouteContext();
   const en = locale === "en";
+  const languageSwitch = useRef<HTMLDetailsElement>(null);
+
+  function closeLanguageMenu() {
+    if (languageSwitch.current) languageSwitch.current.open = false;
+  }
+
+  useEffect(() => {
+    function handleOutsidePress(event: PointerEvent) {
+      const menu = languageSwitch.current;
+      if (menu?.open && event.target instanceof Node && !menu.contains(event.target)) {
+        menu.open = false;
+      }
+    }
+    document.addEventListener("pointerdown", handleOutsidePress, true);
+    return () => document.removeEventListener("pointerdown", handleOutsidePress, true);
+  }, []);
+
   return (
     <main className="page-shell">
       <div className="site-brand"><img className="wiki-brand" src="/mario-francisco-logo.png" alt="Mario Francisco Randrianandrasana" /></div>
       <article className="wiki-page">
         <div className="article-topline">
           <div className="article-category">in: <a href="#competences">{en ? "Software engineering · AI" : "Ingénierie logicielle · IA"}</a></div>
-          <details className="language-switch">
+          <details className="language-switch" ref={languageSwitch}>
             <summary aria-label={en ? "Choose language" : "Choisir la langue"}>
               <span>{en ? "English" : "Français"}</span>
               <svg viewBox="0 0 12 8" aria-hidden="true"><path d="m1 1 5 5 5-5" /></svg>
             </summary>
             <div className="language-menu" role="listbox" aria-label={en ? "Languages" : "Langues"}>
-              <Link role="option" aria-selected={en} to="/{-$locale}" params={{ locale: undefined }}>English</Link>
-              <Link role="option" aria-selected={!en} to="/{-$locale}" params={{ locale: "fr" }}>Français</Link>
+              <Link onClick={closeLanguageMenu} role="option" aria-selected={en} to="/{-$locale}" params={{ locale: undefined }}>English</Link>
+              <Link onClick={closeLanguageMenu} role="option" aria-selected={!en} to="/{-$locale}" params={{ locale: "fr" }}>Français</Link>
             </div>
           </details>
         </div>

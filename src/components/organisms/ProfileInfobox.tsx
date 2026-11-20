@@ -14,6 +14,10 @@ export function ProfileInfobox({ locale = "fr" }: { locale?: Locale }) {
 				<div><dt>{en ? "Specialties" : "Spécialités"}</dt><dd>SaaS · {en ? "AI · automation" : "IA · automatisation"}</dd></div>
 				<div><dt>{en ? "Experience" : "Expérience"}</dt><dd>{en ? "Since 2022" : "Depuis 2022"}</dd></div>
 			</dl>
+			<a className="resume-download" href={en ? "/resumes/Resume-Mario-Francisco-EN.pdf" : "/resumes/CV-Mario-Francisco-FR.pdf"} download>
+				<i className="fa-solid fa-download" aria-hidden="true" />
+				{en ? "Download résumé (PDF)" : "Télécharger le CV (PDF)"}
+			</a>
 			<div className="infobox-footer">{en ? "Available for freelance work" : "Disponible pour missions freelance"}</div>
 		</aside>
 	);

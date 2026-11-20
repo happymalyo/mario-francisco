@@ -1,5 +1,5 @@
 import { ContactIcon } from "../atoms/ContactIcon";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { Locale } from "../../i18n";
 
 const skills = [
@@ -23,6 +23,14 @@ const skillsEn = [
 	["Cloud & local environments", "AWS, Docker, GitHub Actions, GitLab CI/CD, Floci, and LocalStack."],
 ];
 const projectEn: Record<string, { shortDescription: string; details: string }> = {
+	Agassi: {
+		shortDescription: "A French-language learning platform where children aged 6 to 10 explore animals and space through eight interactive lessons.",
+		details: "Rouxy the fox welcomes children aged 6 to 10 to a 3D campsite. Eight lessons in French explore animals and space, from identifying animal tracks to discovering how stars form. Each lesson includes an activity and a quiz that unlocks a badge. Built with Next.js, React, TypeScript, Three.js, and GSAP.",
+	},
+	"Ekraw Studios": {
+		shortDescription: "A digital studio website showcasing custom web and mobile apps, online stores, and AI chatbots.",
+		details: "Visitors can explore the studio’s services, from designing a visual identity to building an online store or integrating a chatbot. Built with Next.js 14, React 18, TypeScript and Tailwind CSS, the site uses next-intl for French and English, Zustand for chat state and Firebase Firestore to store project inquiries. GSAP and ScrollTrigger animate the cards on the About page as visitors scroll.",
+	},
 	Sckoob: {
 		shortDescription: "A bilingual professional community for anonymous discussions about salaries, careers, and job listings. Sign-up is available without an email address.",
 		details: "Founded in March 2026, Sckoob is a bilingual professional community for anonymous discussions about salaries, careers, and job listings. Members can sign up without an email address. Google and Microsoft sign-in are also available; email addresses are neither stored nor hashed, and are replaced with a dummy identifier. Sckoob is accompanied by Sckoobot, its AI agent. The platform has collected over 2,000 job listings, with 100+ new listings per day. Stack: Next.js, React, TypeScript, Tailwind CSS, PostgreSQL, Prisma, tRPC, and Python.",
@@ -50,6 +58,20 @@ type Project = {
 };
 
 const projects: Project[] = [
+	{
+		name: "Agassi",
+		image: "/agassi-project.webp",
+		url: "https://happymalyo.github.io/agassi/",
+		shortDescription: "Une plateforme éducative en français où les 6 à 10 ans explorent les animaux et l’espace à travers huit leçons interactives.",
+		details: "Rouxy le renard accueille les enfants de 6 à 10 ans dans son campement en 3D. Huit leçons en français les invitent à reconnaître des traces d’animaux ou à découvrir comment naissent les étoiles. Chaque leçon propose une activité et un quiz pour gagner un badge. Le projet utilise Next.js, React, TypeScript, Three.js et GSAP.",
+	},
+	{
+		name: "Ekraw Studios",
+		image: "/ekraw-studios-project.webp",
+		url: "https://ekraw-studios.vercel.app/en",
+		shortDescription: "Site vitrine d’un studio numérique spécialisé dans les applications web et mobiles, les boutiques en ligne et les chatbots IA.",
+		details: "Le site présente les services d’Ekraw Studios, de la création d’une identité visuelle au développement d’une boutique en ligne ou à l’intégration d’un chatbot. Développé avec Next.js 14, React 18, TypeScript et Tailwind CSS, le site utilise next-intl pour le français et l’anglais, Zustand pour gérer l’état du chat et Firebase Firestore pour enregistrer les demandes de projet. GSAP et ScrollTrigger animent les cartes de la page À propos au fil du défilement.",
+	},
 	{
 		name: "Sckoob",
 		image: "/sckoob-project.png",
@@ -126,35 +148,80 @@ export function SkillsSection({ locale = "fr" }: { locale?: Locale }) {
 	);
 }
 
+function ProjectDescription({ summary, details, locale }: { summary: string; details: string; locale: Locale }) {
+	const [expanded, setExpanded] = useState(false);
+	const en = locale === "en";
+	return (
+		<div className="project-description">
+			<p>{expanded ? details : summary}</p>
+			<button type="button" aria-expanded={expanded} onClick={() => setExpanded(!expanded)}>
+				{expanded ? (en ? "Show less" : "Voir moins") : (en ? "Show more" : "Voir plus")}
+			</button>
+		</div>
+	);
+}
+
 export function ProjectsSection({ locale = "fr" }: { locale?: Locale }) {
 	const en = locale === "en";
-	const [preview, setPreview] = useState<{ image: string; name: string } | null>(null);
+	const [previewIndex, setPreviewIndex] = useState<number | null>(null);
+	const preview = previewIndex === null ? null : projects[previewIndex];
+	const swipeStart = useRef<{ x: number; y: number } | null>(null);
 	const [zoomed, setZoomed] = useState(false);
 	const closePreview = () => {
-		setPreview(null);
+		setPreviewIndex(null);
 		setZoomed(false);
 	};
+
+	function movePreview(step: number) {
+		setPreviewIndex(index => index === null ? null : (index + step + projects.length) % projects.length);
+		setZoomed(false);
+	}
 
 	return (
 		<section className="article-section projects-section" id="projets">
 			<SectionHeading>{en ? "Projects" : "Projets"}</SectionHeading>
 			<div className="projects-grid">
-				{projects.map(({ name, image, url, shortDescription, details }) => (
+				{projects.map(({ name, image, url, shortDescription, details }, index) => (
 					<article className="project-card" key={name}>
-						<button className="project-image-button" type="button" onClick={() => { setPreview({ image, name }); setZoomed(false); }} aria-label={`${en ? "Enlarge screenshot of" : "Agrandir la capture de"} ${name}`}>
+						<button className="project-image-button" type="button" onClick={() => { setPreviewIndex(index); setZoomed(false); }} aria-label={`${en ? "Enlarge screenshot of" : "Agrandir la capture de"} ${name}`}>
 							<img className="project-image" src={image} alt={`${en ? "Screenshot of" : "Capture du site"} ${name}`} />
 						</button>
-						<h3>{name}</h3>
-						<span className="project-mobile-description">{en ? projectEn[name]?.shortDescription : shortDescription}</span>
 						<a className="project-cta" href={url} target="_blank" rel="noreferrer">{en ? "View project" : "Voir le projet"} <span aria-hidden="true">↗</span></a>
-						<span className="project-description">{en ? projectEn[name]?.details : details}</span>
+						<h3>{name}</h3>
+						<ProjectDescription
+							summary={en ? projectEn[name].shortDescription : shortDescription}
+							details={en ? projectEn[name].details : details}
+							locale={locale}
+						/>
 					</article>
 				))}
 			</div>
-			{preview && <div className={`project-lightbox${zoomed ? " is-zoomed" : ""}`} role="dialog" aria-modal="true" aria-label={`${en ? "Project screenshot" : "Capture du projet"} ${preview.name}`} tabIndex={-1} onKeyDown={(event) => { if (event.key === "Escape") closePreview(); }} onClick={(event) => { if (event.target === event.currentTarget) closePreview(); }}>
+			{preview && <div className={`project-lightbox${zoomed ? " is-zoomed" : ""}`} role="dialog" aria-modal="true" aria-label={`${en ? "Project screenshot" : "Capture du projet"} ${preview.name}`} tabIndex={-1} onKeyDown={(event) => {
+				if (event.key === "Escape") closePreview();
+				if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+					event.preventDefault();
+					movePreview(event.key === "ArrowLeft" ? -1 : 1);
+				}
+			}} onClick={(event) => { if (event.target === event.currentTarget) closePreview(); }}>
 				<button className="project-lightbox-zoom" type="button" onClick={() => setZoomed(!zoomed)} aria-label={zoomed ? (en ? "Zoom out" : "Réduire l’image") : (en ? "View image at full size" : "Afficher l’image en taille réelle")}>{zoomed ? "−" : "+"}</button>
 				<button className="project-lightbox-close" type="button" autoFocus onClick={closePreview} aria-label={en ? "Close image" : "Fermer l’image"}>×</button>
-				<img className="project-lightbox-image" src={preview.image} alt={`${en ? "Enlarged screenshot of" : "Capture agrandie du projet"} ${preview.name}`} />
+				<a className="project-cta lightbox-project-link" href={preview.url} target="_blank" rel="noreferrer">{en ? "View project" : "Voir le projet"} <span aria-hidden="true">↗</span></a>
+				<button type="button" className="lightbox-prev" onClick={() => movePreview(-1)} aria-label={en ? "Previous project" : "Projet précédent"}>‹</button>
+				<button type="button" className="lightbox-next" onClick={() => movePreview(1)} aria-label={en ? "Next project" : "Projet suivant"}>›</button>
+				<img className="project-lightbox-image"
+					onTouchStart={(event) => {
+						const touch = event.touches[0];
+						swipeStart.current = !zoomed && event.touches.length === 1 ? { x: touch.clientX, y: touch.clientY } : null;
+					}}
+					onTouchCancel={() => { swipeStart.current = null; }}
+					onTouchEnd={(event) => {
+						const start = swipeStart.current;
+						swipeStart.current = null;
+						if (!start || event.touches.length) return;
+						const touch = event.changedTouches[0];
+						const dx = touch.clientX - start.x;
+						if (Math.abs(dx) >= 48 && Math.abs(dx) > Math.abs(touch.clientY - start.y)) movePreview(dx < 0 ? 1 : -1);
+					}} src={preview.image} alt={`${en ? "Enlarged screenshot of" : "Capture agrandie du projet"} ${preview.name}`} />
 			</div>}
 		</section>
 	);

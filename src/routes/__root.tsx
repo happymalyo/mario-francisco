@@ -2,10 +2,10 @@ import {
   HeadContent,
   Scripts,
   createRootRoute,
+  useMatch,
 } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
-import { useRouterState } from '@tanstack/react-router'
 
 import appCss from '../styles.css?url'
 
@@ -47,7 +47,11 @@ export const Route = createRootRoute({
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  const locale = useRouterState({ select: (state) => state.matches.at(-1)?.params.locale })
+  const locale = useMatch({
+    from: '/{-$locale}',
+    shouldThrow: false,
+    select: (match) => match.params.locale,
+  })
   return (
     <html lang={locale === 'fr' ? 'fr' : 'en'}>
       <head>

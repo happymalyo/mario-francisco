@@ -100,22 +100,35 @@ body {
 .soft-skills-grid ul { margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.8; list-style: disc; }
 .soft-skills-grid li::marker { font-weight: 700; }
 .projects-section { margin-top: 36px; }
-.projects-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 20px; }
 .project-card { position: relative; display: flex; min-width: 0; flex-direction: column; overflow: hidden; border: 1px solid #d3d3d3; border-radius: 4px; background: #fff; color: #333; }
 .project-image-button { display: block; width: 100%; padding: 0; overflow: hidden; border: 0; background: #f1f1f1; cursor: zoom-in; }
 .project-image { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; object-position: center top; background: #f1f1f1; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .project-image { transition: transform .25s ease-out; }
+  .project-image-button:hover .project-image { transform: scale(1.06); }
+}
 .project-card h3 { margin: 0; padding: 12px 16px 4px; color: #333; font-size: 19px; font-weight: 600; }
-.project-cta { align-self: flex-start; margin: 0 16px 14px; color: #a46b00; font-size: 13px; font-weight: 600; text-decoration: none; }
+.project-cta { position: absolute; top: 8px; right: 8px; padding: 5px 10px; border: 1px solid #d3d3d3; border-radius: 4px; background: #fff; color: #805200; font-size: 13px; font-weight: 600; text-decoration: none; }
 .project-cta:hover { color: #7b5000; text-decoration: underline; }
-.project-description { position: absolute; inset: 0 0 66px; display: block; overflow-y: auto; padding: 16px; background: rgba(18, 25, 28, .9); color: #fff; text-align: left; font-size: 14px; line-height: 1.6; opacity: 0; pointer-events: none; transition: opacity .18s ease; }
-.project-card:hover .project-description, .project-card:focus-within .project-description { opacity: 1; }
-.project-mobile-description { display: none; }
+@media (hover: hover) {
+  .project-card .project-cta { opacity: 0; pointer-events: none; }
+  .project-card:hover .project-cta, .project-card .project-cta:focus-visible { opacity: 1; pointer-events: auto; }
+}
+.project-description { margin: 0 16px 10px; }
+.project-description button { padding: 4px 0; color: #805200; font-size: 13px; text-decoration: underline; cursor: pointer; }
+.project-description button:focus-visible { outline: 2px solid #16809a; outline-offset: 2px; }
 .project-image-button:focus-visible, .project-cta:focus-visible { outline: 3px solid #16809a; outline-offset: -3px; }
 .project-lightbox { position: fixed; z-index: 1000; inset: 0; display: grid; place-items: center; overflow: auto; padding: 48px; background: rgba(8, 12, 16, .92); }
 .project-lightbox-image { display: block; max-width: min(100%, 1400px); max-height: calc(100vh - 96px); object-fit: contain; box-shadow: 0 16px 64px rgba(0, 0, 0, .45); touch-action: pinch-zoom; }
 .project-lightbox.is-zoomed { display: block; padding: 68px 24px 24px; }
 .project-lightbox.is-zoomed .project-lightbox-image { width: auto; height: auto; max-width: none; max-height: none; margin: 0 auto; }
 .project-lightbox-zoom, .project-lightbox-close { position: fixed; z-index: 1; top: 18px; display: grid; width: 48px; height: 48px; place-items: center; padding: 0; border: 0; border-radius: 0; outline: 0; box-shadow: none; appearance: none; background: transparent; color: #fff; font: inherit; font-size: 30px; line-height: 1; cursor: pointer; }
+.lightbox-project-link { position: fixed; top: 26px; right: 72px; z-index: 1; }
+.lightbox-prev, .lightbox-next { position: fixed; z-index: 1; top: 50%; transform: translateY(-50%); width: 40px; height: 44px; border-radius: 4px; background: #202428; color: white; font-size: 28px; line-height: 1; cursor: pointer; }
+.lightbox-prev { left: 4px; }
+.lightbox-next { right: 4px; }
+.project-lightbox.is-zoomed .project-lightbox-image { touch-action: auto; }
 .project-lightbox-zoom { left: 20px; font-size: 34px; }
 .project-lightbox-close { right: 20px; font-size: 36px; }
 .experience-table-wrap { width: 100%; overflow-x: auto; }
@@ -143,6 +156,7 @@ body {
 .infobox dl > div { display: grid; grid-template-columns: 86px minmax(0, 1fr); gap: 4px; padding: 6px 4px; border-bottom: 1px solid #aaa; line-height: 1.35; }
 .infobox dt { font-weight: 700; }
 .infobox dd { margin: 0; }
+.resume-download { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; color: #805200; font-size: 13px; font-weight: 600; text-decoration: underline; }
 .infobox-copy { margin: 0; padding: 7px 5px 9px; line-height: 1.55; }
 .infobox-footer { padding: 4px; background: #ff9900; text-align: center; font-size: 10px; font-weight: 700; }
 @media (max-width: 760px) {
@@ -152,9 +166,6 @@ body {
   .wiki-page { min-height: calc(100vh - 40px); padding: 22px 22px 48px; }
   .article-heading { align-items: flex-start; flex-direction: column; gap: 8px; }
   .wiki-columns { grid-template-columns: minmax(0, 1fr) 220px; gap: 20px; }
-  .projects-grid { grid-template-columns: 1fr; }
-  .project-description { display: none; }
-  .project-mobile-description { display: block; padding: 0 16px; color: #4a4a4a; font-size: 13px; line-height: 1.6; }
 }
 @media (max-width: 560px) {
   .wiki-page { padding: 22px 16px 40px; }
